@@ -9,7 +9,7 @@ Optionally, you can also customize the service configuration in rc.conf by speci
 
 %%NAME%%_memory="YES"
 %%NAME%%_ip="0.0.0.0:7435"
-%%NAME%%_dir="/var/db/%%NAME%%db"
+%%NAME%%_dir="/var/db/%%NAME%%"
 %%NAME%%_user="root"
 %%NAME%%_pass="root"
 
