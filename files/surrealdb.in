@@ -74,10 +74,22 @@ stop_cmd="%%NAME%%_stop"
 # Function to stop the %%NAME%% service.
 %%NAME%%_stop() {
     echo "Stopping %%NAME%% service..."
-    # Get the process ID from the pid file and send a termination signal to stop the service.
-    kill -TERM $(cat /var/run/%%NAME%%.pid)
-    # Remove the pid file.
-    rm /var/run/%%NAME%%.pid
+    local pidfile="/var/run/%%NAME%%.pid"
+
+    if [ -f "$pidfile" ]; then
+        local pid=$(cat "$pidfile")
+
+        # Send a termination signal to the process
+        kill -TERM "$pid"
+
+        # Wait until the process stops
+        while ps -p "$pid" > /dev/null; do
+            sleep 1
+        done
+    fi
+
+    # Remove the PID file if it exists
+    rm -f "$pidfile"
 }
 
 # Run the appropriate command based on the argument passed to the script.
