@@ -11,7 +11,7 @@ Optionally, you can also customize the service configuration in rc.conf by speci
 ```
 surrealdb_memory="YES"
 surrealdb_ip="0.0.0.0:7435"
-surrealdb_dir="/var/db/surrealdbdb"
+surrealdb_dir="/var/db/surrealdb"
 surrealdb_user="root"
 surrealdb_pass="root"
 ```
