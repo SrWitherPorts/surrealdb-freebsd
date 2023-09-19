@@ -1,0 +1,20 @@
+[
+{ type: install
+  message: <<EOM
+Enable the %%NAME%% service in your FreeBSD system's rc.conf file. You can do this by adding the following line to /etc/rc.conf:
+
+%%NAME%%_enable="YES"
+
+Optionally, you can also customize the service configuration in rc.conf by specifying additional parameters like memory, port, directory, user, and password. For example:
+
+%%NAME%%_memory="YES"
+%%NAME%%_ip="0.0.0.0:7435"
+%%NAME%%_dir="/var/db/%%NAME%%db"
+%%NAME%%_user="root"
+%%NAME%%_pass="root"
+
+Make sure to set a username and password before the initial startup when using disk-based storage mode, or else the default (root) will remain, and it won't be removed until the directory where the data is stored is deleted.
+
+EOM
+}
+]

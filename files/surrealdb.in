@@ -1,0 +1,84 @@
+#!/bin/sh
+
+# PROVIDE: %%NAME%%
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following line to /etc/rc.conf to enable surreal:
+# %%NAME%%_enable (bool):  Set to "NO" by default.
+#                         Set it to "YES" to enable the surreal service.
+# %%NAME%%_memory (bool): Set to "YES" by default.
+#                        Set it to "NO" to use file storage instead of memory.
+# %%NAME%%_ip (int):     Default to "0.0.0.0:7435".
+#                        Port number for surreal service.
+# %%NAME%%_dir (str):     Default to "/var/db/%%NAME%%".
+#                        Base directory for surreal data storage.
+# %%NAME%%_user (str):    Default to "root".
+#                        User to run the surreal service as.
+# %%NAME%%_pass (str):    Default to "root".
+#                        Password for surreal service.
+#
+
+# Include the rc.subr script for FreeBSD service management.
+. /etc/rc.subr
+
+# Define the name of the service.
+name="%%NAME%%"
+
+# Define the rcvar (enable/disable variable) for the service.
+rcvar=${name}_enable
+
+# Load the rc.conf configuration for the service.
+load_rc_config $name
+
+# Default values in external configuration (customizable).
+: ${%%NAME%%_enable:=no}
+: ${%%NAME%%_memory:=yes}
+: ${%%NAME%%_ip:=0.0.0.0:7435}
+: ${%%NAME%%_dir:=/var/db/%%NAME%%}
+: ${%%NAME%%_user:=root}
+: ${%%NAME%%_pass:=root}
+
+# To lowercase
+%%NAME%%_memory=$(echo "$%%NAME%%_memory" | tr '[:upper:]' '[:lower:]')
+
+# Define the command to start the service.
+command="/usr/local/bin/surreal"
+
+# Initialize the command arguments.
+command_args=""
+
+# Build command arguments based on configuration.
+if [ "$%%NAME%%_memory" = "yes" ]; then
+    command_args="start memory --bind $%%NAME%%_ip -A --auth --user $%%NAME%%_user --pass $%%NAME%%_pass"
+else
+    command_args="start file://$%%NAME%%_dir --bind $%%NAME%%_ip -A --auth --user $%%NAME%%_user --pass $%%NAME%%_pass"
+fi
+
+# Define the start command for the service.
+start_cmd="%%NAME%%_start"
+
+# Function to start the %%NAME%% service.
+%%NAME%%_start() {
+    echo "Starting %%NAME%% service..."
+    # Run the command in the background with nohup and redirect output to a log file.
+    nohup $command $command_args >> /var/log/%%NAME%%.log 2>&1 &
+    # Save the process ID to a pid file.
+    echo $! > /var/run/%%NAME%%.pid
+}
+
+# Define the stop command for the service.
+stop_cmd="%%NAME%%_stop"
+
+# Function to stop the %%NAME%% service.
+%%NAME%%_stop() {
+    echo "Stopping %%NAME%% service..."
+    # Get the process ID from the pid file and send a termination signal to stop the service.
+    kill -TERM $(cat /var/run/%%NAME%%.pid)
+    # Remove the pid file.
+    rm /var/run/%%NAME%%.pid
+}
+
+# Run the appropriate command based on the argument passed to the script.
+run_rc_command "$1"
