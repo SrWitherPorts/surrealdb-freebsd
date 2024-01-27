@@ -1,27 +1,24 @@
 PORTNAME=	surrealdb
-DISTVERSION=	v1.0.0
+DISTVERSIONPREFIX=  v
+DISTVERSION=	1.1.1
 CATEGORIES=	databases
-MASTER_SITES=	https://github.com/surrealdb/surrealdb/
 
 MAINTAINER=	fjachuf@gmail.com
 COMMENT=	Real-time, collaborative, scalable, distributed document-graph DB
 WWW=		https://surrealdb.com/
 
-LICENSE=	APACHE20
+LICENSE=	BSL11
+LICENSE_NAME=	Business Source License 1.1
 LICENSE_FILE=	${WRKSRC}/LICENSE
+LICENSE_PERMS=	dist-mirror no-dist-sell pkg-mirror no-pkg-sell auto-accept
 
-BUILD_DEPENDS=	pkgconf:devel/pkgconf
 LIB_DEPENDS=	libzstd.so:archivers/zstd
 
-USES=	cargo llvm
+USES=	cargo llvm pkgconfig
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	${PORTNAME}
 
 USE_RC_SUBR=	${PORTNAME}
-
-SUB_FILES=	pkg-message
-SUB_LIST=	NAME=${PORTNAME}
 
 PLIST_FILES=	bin/surreal
 
